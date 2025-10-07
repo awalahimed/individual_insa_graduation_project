@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+  publish = "dist" # This is the correct folder for Vite projects
+  base = "/"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
