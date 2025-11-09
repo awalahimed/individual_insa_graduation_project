@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
   user: User | null;
@@ -9,7 +10,7 @@ interface AuthContextType {
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signUp: (email: string, password: string, fullName: string, phone?: string) => Promise<{ error: any }>;
-  signOut: () => Promise<void>;
+  signOut: (redirectTo?: string) => Promise<void>;
   userRole: string | null;
 }
 
@@ -21,6 +22,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<string | null>(null);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Set up auth state listener
@@ -63,8 +65,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .order("created_at", { ascending: false })
         .limit(1);
 
-      if (error) throw error;
-      setUserRole(data?.[0]?.role || null);
+      if (error) {
+        console.error("Error fetching user role:", error);
+        throw error;
+      }
+      const role = data?.[0]?.role || null;
+      setUserRole(role);
     } catch (error) {
       console.error("Error fetching user role:", error);
       setUserRole(null);
@@ -137,12 +143,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const signOut = async () => {
+  const signOut = async (redirectTo?: string) => {
+    const currentRole = userRole; // Capture current role before signing out
     await supabase.auth.signOut();
     toast({
       title: "Signed out",
       description: "You have been signed out successfully.",
     });
+
+    // Implement role-specific redirection
+    if (redirectTo) {
+      navigate(redirectTo);
+    } else {
+      // Default redirection based on role or to a general login page
+      switch (currentRole) {
+        case "admin":
+          navigate("/login/admin");
+          break;
+        case "staff":
+          navigate("/login/staff");
+          break;
+        case "deliverer":
+          navigate("/login/deliverer");
+          break;
+        case "customer":
+          navigate("/login/customer");
+          break;
+        default:
+          navigate("/login"); // Fallback to general login
+          break;
+      }
+    }
   };
 
   return (

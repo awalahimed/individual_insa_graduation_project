@@ -101,7 +101,6 @@ export default function DelivererDashboard() {
 
   const toggleOnlineStatus = async () => {
     if (!delivererId) return;
-    
     try {
       const newStatus = !isOnline;
       const { error } = await supabase
@@ -125,7 +124,6 @@ export default function DelivererDashboard() {
       delivered: { variant: "default" as const, label: "Delivered" },
       cancelled: { variant: "destructive" as const, label: "Cancelled" },
     };
-
     const config = statusConfig[status as keyof typeof statusConfig];
     return <Badge variant={config.variant}>{config.label}</Badge>;
   };

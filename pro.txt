@@ -1,0 +1,38 @@
+Of course. Here is the full English presentation script, consolidated into one block for easy use during your video recording. This script includes the smooth transition we discussed and matches the Amharic version perfectly.
+
+---
+
+### **Complete English Presentation Script (for Video Recording)**
+
+**(Video 1: Introduction)**
+"Hello everyone! Today, I'm here to introduce you to my graduation project, 'TailorPro'. TailorPro is a modern tailoring shop management system."
+
+**(Transition Phrase)**
+"Before we dive into the detailed features of TailorPro, it is very important to understand the main problem this project was designed to solve."
+
+**(Video 2: The Problem)**
+"Many tailoring shops still use traditional, manual methods. This creates problems such as lost orders, payment confusion, and inadequate customer communication."
+
+**(Video 3: The Solution)**
+"TailorPro is the solution to these problems. It helps tailoring shops operate digitally and simplifies their work. It allows you to manage orders, payments, and customers in one place."
+
+**(Video 4: Key Features - Part 1)**
+"TailorPro's key features include order management, payment tracking, a customer portal, and Chapa payments."
+
+**(Video 5: Key Features - Part 2)**
+"Additionally, it has role-based access (e.g., Admin, Staff, Deliverer), PDF receipt generation, delivery management, and a business analytics dashboard."
+
+**(Video 6: Live Demonstration)**
+"Now, I will show you the practical operation of my project live. We will see how a customer places an order, how staff handle it, and how an administrator monitors it."
+
+**(Video 7: Technical Architecture - Frontend)**
+"Regarding TailorPro's technical architecture, the frontend was built with React and TypeScript, using Vite for fast development and Tailwind CSS for a beautiful design."
+
+**(Video 8: Technical Architecture - Backend)**
+"The backend was built with Supabase. Supabase provides a PostgreSQL Database, user management (Supabase Auth), and serverless functions (Edge Functions) including for Chapa payments."
+
+**(Video 9: Conclusion and Achievements)**
+"In conclusion, this project demonstrates my knowledge in building a full-stack application, implementing security systems, and integrating a local payment system. It's also a scalable system for the future."
+
+**(Video 10: Thank You)**
+"Thank you very much for your attention. If you have any questions, you can ask."

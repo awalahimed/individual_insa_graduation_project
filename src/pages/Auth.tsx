@@ -34,8 +34,15 @@ export default function Auth() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Check if already logged in
-  useState(() => {
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    const tab = query.get("tab");
+    if (tab && ["admin", "staff", "customer", "deliverer"].includes(tab)) {
+      setActiveTab(tab as "admin" | "staff" | "customer" | "deliverer");
+    }
+  }, []);
+
+  useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         // Check user role and redirect
@@ -80,8 +87,10 @@ export default function Auth() {
 
         if (error) throw error;
 
-        // Check user role
-        const { data: roleData } = await supabase
+        // Check user role - wait a bit for role to be available
+        // await new Promise(resolve => setTimeout(resolve, 300));
+        
+        const { data: roleData, error: roleError } = await supabase
           .from("user_roles")
           .select("role")
           .eq("user_id", data.user.id)
@@ -122,6 +131,10 @@ export default function Auth() {
         }
       } else {
         // Sign up
+        if (activeTab === "admin" || activeTab === "deliverer") {
+
+          throw new Error("Admin and Deliverer accounts must be created by an administrator.");
+        }
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
@@ -140,12 +153,18 @@ export default function Auth() {
         if (data.user) {
           const assignedRole = activeTab === "staff" ? "staff" : "customer";
           
-          await supabase
+          const { error: roleInsertError } = await supabase
             .from("user_roles")
             .insert({
               user_id: data.user.id,
               role: assignedRole,
             });
+  
+          if (roleInsertError) {
+            console.error("Error inserting user role:", roleInsertError);
+            await supabase.auth.signOut();
+            throw new Error("Failed to assign user role. Please try again.");
+          }
         }
 
         toast({
@@ -182,7 +201,10 @@ export default function Auth() {
         </CardHeader>
         <CardContent>
           {/* User Type Selection */}
-          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "admin" | "staff" | "customer" | "deliverer")} className="w-full mb-6">
+          <Tabs value={activeTab} onValueChange={(v) => {
+            setActiveTab(v as "admin" | "staff" | "customer" | "deliverer");
+            navigate(`?tab=${v}`, { replace: true });
+          }} className="w-full mb-6">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="admin" className="flex items-center gap-1 text-xs sm:text-sm">
                 <Users className="h-4 w-4" />

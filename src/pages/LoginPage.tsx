@@ -10,19 +10,25 @@ import { Scissors, Users, User, Truck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 
+interface LoginPageProps {
+  role?: "admin" | "staff" | "customer" | "deliverer";
+}
+
 const signInSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-export default function LoginPage() {
-  const [activeTab, setActiveTab] = useState<"admin" | "staff" | "customer" | "deliverer">("admin");
+export default function LoginPage({ role: propRole }: LoginPageProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Determine the active role based on prop or default to 'customer'
+  const activeRole = propRole || "customer";
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -77,21 +83,21 @@ export default function LoginPage() {
         .eq("user_id", data.user.id)
         .single();
 
-      if (activeTab === "admin") {
+      if (activeRole === "admin") {
         if (roleData?.role === "admin") {
           navigate("/dashboard");
         } else {
           await supabase.auth.signOut();
           throw new Error("This login is for administrators only.");
         }
-      } else if (activeTab === "staff") {
+      } else if (activeRole === "staff") {
         if (roleData?.role === "staff") {
           navigate("/dashboard");
         } else {
           await supabase.auth.signOut();
           throw new Error("This login is for staff only. Please use the appropriate tab.");
         }
-      } else if (activeTab === "deliverer") {
+      } else if (activeRole === "deliverer") {
         if (roleData?.role === "deliverer") {
           navigate("/deliverer/dashboard");
         } else {
@@ -126,33 +132,12 @@ export default function LoginPage() {
               <Scissors className="h-8 w-8 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold">Login to TailorPro</CardTitle>
+          <CardTitle className="text-2xl font-bold">Login as {activeRole.charAt(0).toUpperCase() + activeRole.slice(1)}</CardTitle>
           <CardDescription>
-            Choose your login type to continue
+            Enter your credentials to log in as a {activeRole}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "admin" | "staff" | "customer" | "deliverer")} className="w-full mb-6">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="admin" className="flex items-center gap-1 text-xs sm:text-sm">
-                <Users className="h-4 w-4" />
-                <span className="hidden sm:inline">Admin</span>
-              </TabsTrigger>
-              <TabsTrigger value="staff" className="flex items-center gap-1 text-xs sm:text-sm">
-                <Users className="h-4 w-4" />
-                <span className="hidden sm:inline">Staff</span>
-              </TabsTrigger>
-              <TabsTrigger value="deliverer" className="flex items-center gap-1 text-xs sm:text-sm">
-                <Truck className="h-4 w-4" />
-                <span className="hidden sm:inline">Deliverer</span>
-              </TabsTrigger>
-              <TabsTrigger value="customer" className="flex items-center gap-1 text-xs sm:text-sm">
-                <User className="h-4 w-4" />
-                <span className="hidden sm:inline">Customer</span>
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -181,12 +166,7 @@ export default function LoginPage() {
               {loading ? "Logging in..." : "Login"}
             </Button>
           </form>
-          <div className="mt-4 text-center text-sm">
-            Don't have an account?{" "}
-            <Link to="/signup" className="underline">
-              Sign up
-            </Link>
-          </div>
+
         </CardContent>
       </Card>
     </div>

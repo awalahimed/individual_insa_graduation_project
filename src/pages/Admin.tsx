@@ -50,8 +50,8 @@ interface UserWithRole {
   id: string;
   full_name: string;
   phone: string | null;
-  role: "admin" | "staff" | "customer";
   created_at: string;
+  role: "admin" | "staff" | "customer" | "deliverer";
 }
 
 interface Order {
@@ -207,7 +207,7 @@ export default function Admin() {
     }
   };
 
-  const handleChangeRole = async (userId: string, newRole: "admin" | "staff" | "customer") => {
+  const handleChangeRole = async (userId: string, newRole: "admin" | "staff" | "customer" | "deliverer") => {
     try {
       await supabase.from("user_roles").update({ role: newRole }).eq("user_id", userId);
 
@@ -251,6 +251,8 @@ export default function Admin() {
         return "bg-red-500/10 text-red-700 dark:text-red-400";
       case "staff":
         return "bg-blue-500/10 text-blue-700 dark:text-blue-400";
+      case "deliverer":
+        return "bg-green-500/10 text-green-700 dark:text-green-400";
       default:
         return "bg-gray-500/10 text-gray-700 dark:text-gray-400";
     }
@@ -405,6 +407,7 @@ export default function Admin() {
                             <SelectItem value="staff">Staff</SelectItem>
                             <SelectItem value="admin">Admin</SelectItem>
                             <SelectItem value="customer">Customer</SelectItem>
+                            <SelectItem value="deliverer">Deliverer</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -447,6 +450,7 @@ export default function Admin() {
                               <SelectItem value="staff">Staff</SelectItem>
                               <SelectItem value="admin">Admin</SelectItem>
                               <SelectItem value="customer">Customer</SelectItem>
+                              <SelectItem value="deliverer">Deliverer</SelectItem>
                             </SelectContent>
                           </Select>
                         </TableCell>

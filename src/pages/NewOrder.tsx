@@ -168,7 +168,7 @@ export default function NewOrder() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6 animate-in fade-in duration-500">
+    <div className="min-h-screen overflow-y-auto max-w-2xl mx-auto space-y-6 animate-in fade-in duration-500">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" onClick={() => navigate("/orders")}>
           <ArrowLeft className="w-4 h-4" />
@@ -298,7 +298,7 @@ export default function NewOrder() {
               </div>
 
               {deliveryRequired && (
-                <div className="space-y-3 pl-6">
+                <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 pl-6">
                   <div className="space-y-2">
                     <Label htmlFor="city">City *</Label>
                     <Input

@@ -58,7 +58,7 @@ interface Payment {
 const paymentSchema = z.object({
   payerName: z.string().min(2, "Payer name must be at least 2 characters").max(100),
   amount: z.number().min(0.01, "Amount must be greater than 0"),
-  paymentMethod: z.enum(["cash", "bank", "other"]),
+  paymentMethod: z.enum(["cash", "bank", "chapa", "other"]),
   notes: z.string().max(500).optional(),
 });
 
@@ -86,6 +86,18 @@ export default function OrderDetail() {
       }
     }
   }, [id]);
+
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    if (query.get("payment_success")) {
+      toast({
+        title: "Payment Successful",
+        description: "Your Chapa payment has been processed successfully.",
+      });
+      // Optionally, clear the query parameter from the URL
+      navigate(`/order/${id}`, { replace: true });
+    }
+  }, [id, navigate, toast]);
 
   const fetchOrderDetails = async () => {
     try {
@@ -174,6 +186,46 @@ export default function OrderDetail() {
       if (order && amount > order.remaining_balance) {
         setErrors({ amount: "Payment amount exceeds remaining balance" });
         setIsSubmitting(false);
+        return;
+      }
+
+      if (validated.paymentMethod === "chapa") {
+        // Initiate Chapa payment
+        const { data, error: chapaError } = await supabase.functions.invoke(
+          "chapa-payment",
+          {
+            body: {
+              order_id: id,
+              amount: validated.amount,
+              currency: "ETB", // Assuming ETB as currency
+              return_url: `${window.location.origin}/order/${id}?payment_success=true`,
+              customer_name: validated.payerName,
+              customer_email: user?.email, // Assuming user is logged in and email is available
+            },
+          }
+        );
+
+        if (chapaError) {
+          console.error("Error initiating Chapa payment:", chapaError);
+          toast({
+            title: "Error",
+            description: "Failed to initiate Chapa payment. Please try again.",
+            variant: "destructive",
+          });
+          setIsSubmitting(false);
+          return;
+        }
+
+        if (data && data.data && data.data.checkout_url) {
+          window.location.href = data.data.checkout_url;
+        } else {
+          toast({
+            title: "Error",
+            description: "Failed to get Chapa checkout URL.",
+            variant: "destructive",
+          });
+          setIsSubmitting(false);
+        }
         return;
       }
 
@@ -626,6 +678,7 @@ export default function OrderDetail() {
                     <SelectContent>
                       <SelectItem value="cash">Cash</SelectItem>
                       <SelectItem value="bank">Bank Transfer</SelectItem>
+                      <SelectItem value="chapa">Chapa</SelectItem>
                       <SelectItem value="other">Other</SelectItem>
                     </SelectContent>
                   </Select>

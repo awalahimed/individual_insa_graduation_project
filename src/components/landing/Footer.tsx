@@ -33,9 +33,9 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-card border-t border-border">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-8 mb-8">
+    <footer className="bg-gray-900 text-white">
+      <div className="container mx-auto px-4 py-16">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-8 mb-12">
           {/* Brand Column */}
           <div className="col-span-2">
             <Link to="/" className="flex items-center gap-2 mb-4">
@@ -44,37 +44,18 @@ export default function Footer() {
               </div>
               <span className="font-semibold text-xl">TailorPro</span>
             </Link>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="text-sm text-gray-400 mb-6">
               Modern management software designed specifically for tailor shops.
-              Streamline your operations and grow your business.
             </p>
-            <div className="flex gap-3">
-              {socialLinks.map((social, index) => {
-                const Icon = social.icon;
-                return (
-                  <a
-                    key={index}
-                    href={social.href}
-                    aria-label={social.label}
-                    className="w-9 h-9 rounded-lg bg-muted hover:bg-primary hover:text-primary-foreground transition-smooth flex items-center justify-center"
-                  >
-                    <Icon className="w-4 h-4" />
-                  </a>
-                );
-              })}
-            </div>
           </div>
 
           {/* Links Columns */}
           <div>
-            <h3 className="font-semibold mb-3">Product</h3>
-            <ul className="space-y-2">
+            <h3 className="font-semibold mb-4 text-gray-300">Product</h3>
+            <ul className="space-y-3">
               {footerLinks.product.map((link, index) => (
                 <li key={index}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-smooth"
-                  >
+                  <a href={link.href} className="text-sm text-gray-400 hover:text-white transition-smooth">
                     {link.name}
                   </a>
                 </li>
@@ -83,14 +64,11 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-semibold mb-3">Company</h3>
-            <ul className="space-y-2">
+            <h3 className="font-semibold mb-4 text-gray-300">Company</h3>
+            <ul className="space-y-3">
               {footerLinks.company.map((link, index) => (
                 <li key={index}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-smooth"
-                  >
+                  <a href={link.href} className="text-sm text-gray-400 hover:text-white transition-smooth">
                     {link.name}
                   </a>
                 </li>
@@ -99,14 +77,11 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-semibold mb-3">Support</h3>
-            <ul className="space-y-2">
+            <h3 className="font-semibold mb-4 text-gray-300">Support</h3>
+            <ul className="space-y-3">
               {footerLinks.support.map((link, index) => (
                 <li key={index}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-smooth"
-                  >
+                  <a href={link.href} className="text-sm text-gray-400 hover:text-white transition-smooth">
                     {link.name}
                   </a>
                 </li>
@@ -115,14 +90,11 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-semibold mb-3">Legal</h3>
-            <ul className="space-y-2">
+            <h3 className="font-semibold mb-4 text-gray-300">Legal</h3>
+            <ul className="space-y-3">
               {footerLinks.legal.map((link, index) => (
                 <li key={index}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-smooth"
-                  >
+                  <a href={link.href} className="text-sm text-gray-400 hover:text-white transition-smooth">
                     {link.name}
                   </a>
                 </li>
@@ -132,10 +104,20 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-border">
-          <p className="text-center text-sm text-muted-foreground">
-            © {new Date().getFullYear()} TailorPro. All rights reserved.
+        <div className="border-t border-gray-800 pt-8 flex flex-col sm:flex-row justify-between items-center">
+          <p className="text-sm text-gray-500 mb-4 sm:mb-0">
+            &copy; {new Date().getFullYear()} TailorPro. All rights reserved.
           </p>
+          <div className="flex gap-4">
+            {socialLinks.map((social, index) => {
+              const Icon = social.icon;
+              return (
+                <a key={index} href={social.href} aria-label={social.label} className="text-gray-500 hover:text-white transition-smooth">
+                  <Icon className="w-5 h-5" />
+                </a>
+              );
+            })}
+          </div>
         </div>
       </div>
     </footer>

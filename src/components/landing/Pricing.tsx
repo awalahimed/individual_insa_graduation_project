@@ -59,7 +59,7 @@ const plans = [
 
 export default function Pricing() {
   return (
-    <section id="pricing" className="py-20 px-4">
+    <section id="pricing" className="py-20 px-4 bg-muted/30">
       <div className="container mx-auto">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
@@ -76,7 +76,7 @@ export default function Pricing() {
           {plans.map((plan, index) => (
             <Card
               key={index}
-              className={`relative ${
+              className={`relative flex flex-col ${
                 plan.popular
                   ? "border-primary shadow-elegant scale-105"
                   : "border-border"
@@ -99,18 +99,21 @@ export default function Pricing() {
                 </div>
               </CardHeader>
 
-              <CardContent className="space-y-6">
-                <ul className="space-y-3">
-                  {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">{feature}</span>
+              <CardContent className="flex-grow">
+                <ul className="space-y-4">
+                  {plan.features.map((feature, i) => (
+                    <li key={i} className="flex items-center gap-3">
+                      <Check className="w-5 h-5 text-primary" />
+                      <span>{feature}</span>
                     </li>
                   ))}
                 </ul>
+              </CardContent>
 
+              <div className="p-6 mt-auto">
                 <Link to="/auth">
                   <Button
+                    size="lg"
                     className={`w-full ${
                       plan.popular ? "gradient-primary border-0" : ""
                     }`}
@@ -119,7 +122,7 @@ export default function Pricing() {
                     {plan.cta}
                   </Button>
                 </Link>
-              </CardContent>
+              </div>
             </Card>
           ))}
         </div>
